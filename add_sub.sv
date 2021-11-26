@@ -3,13 +3,18 @@ module add_sub (
     input [15:0] X, Y,
     input addSub, reset, clk
     ); //addSub is 0 if add, 1 if subtract
-    reg [3:0] ps, ns;
-    reg [15:0] x, y;
+    // reg [3:0] ps, ns;
+    // reg [15:0] x, y;
 
-    `define x_exp x[14:10];
-    `define y_exp y[14:10];
-    `define x_man x[9:0];
-    `define y_man y[9:0];
+    // `define x_exp x[14:10];
+    // `define y_exp y[14:10];
+    // `define x_man x[9:0];
+    // `define y_man y[9:0];
+
+    reg [3:0] ps, ns;
+    reg x_sign, y_sign;
+    reg [4:0] x_exp, y_exp;
+    reg [9:0] x_man, y_man;
 
 
     always @ (posedge clk) begin //moore synchronous reset
@@ -21,6 +26,78 @@ module add_sub (
             ps <= ns;
     end
 
+    //posedge clk in case a state loops back to itself and requires the same 
+    //computations done
+    always @ (*) begin 
+        case (ps)
+            0: begin //load x and y into temp storage
+                x_sign = X[15];
+                y_sign = Y[15];
+                x_exp = X[14:10];
+                y_exp = Y[14:10];
+                x_man = X[9:0];
+                y_man = Y[9:0];
+                done = 0;
+                if (X == 0 || Y == 0)
+                    ns = 1;
+                else begin
+                    if (addSub) //1 for sub
+                        ns = 2;
+                    else begin //0 for add
+                        if (x_exp == y_exp) //exp equal?
+                            ns = 5;
+                        else //exp not equal
+                            ns = 3;
+                    end
+                end
+            end
+            1: begin
+                if (X != 0)
+                    result = X;
+                else if (Y != 0)
+                    result = Y;                   
+                done = 1;
+            end
+            2: begin
+                y[15] = ~y[15];
+                if (`x_exp == `y_exp) //exp equal?
+                            ns = 5;
+                else //exp not equal
+                            ns = 3;
+            end
+            3: begin
+                if (`x_exp < `y_exp) begin //if x is smaller exp
+                    `x_exp = `x_exp + 1; //increment smaller exp
+                    `x_man = `x_man >> 1; //right shift mantissa
+                    if (`x_man == 0)
+                        ns = 4;
+                    else begin
+                        if (`x_exp == `y_exp) //exp equal?
+                            ns = 5;
+                        else //exp not equal /// BUG will looping back to 3 again trigger the logic again?
+                            ns = 3;
+                    end
+                end
+                else begin //if y is smaller exp
+                    `y_exp = `y_exp + 1; //increment smaller exp
+                    `y_man = `y_man >> 1; //right shift mantissa
+                    if (`y_man == 0)
+                        ns = 4;
+                    else begin
+                        if (`x_exp == `y_exp) //exp equal?
+                            ns = 5;
+                        else //exp not equal /// BUG will looping back to 3 again trigger the logic again?
+                            ns = 3;
+                    end
+                end
+                //////looping back to 3 again will trigger the logic again?
+            end
+        endcase
+    end
+
+
+
+    /*
     //posedge clk in case a state loops back to itself and requires the same 
     //computations done
     always @ (ps) begin 
@@ -84,6 +161,6 @@ module add_sub (
                 //////looping back to 3 again will trigger the logic again?
             end
         endcase
-    end
+    end*/
 
 endmodule
