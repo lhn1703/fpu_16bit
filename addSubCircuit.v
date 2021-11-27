@@ -3,9 +3,6 @@ module addSubCircuit (
     input [15:0] X, Y,
     input addSub, reset, clk
     ); //addSub is 0 if add, 1 if subtract
-    //reg [3:0] ps, ns;
-    //reg [15:0] x, y;
-
 
     reg [3:0] state;
     reg xSign, ySign, zSign;
@@ -192,7 +189,7 @@ module addSubCircuit (
                     done <= 1;
                 end
                 11: begin
-                    result <= {zSign, zExp, zMan[9:10]};
+                    result <= {zSign, zExp, zMan[9:0]};
                     done <= 1;
                 end
             endcase
