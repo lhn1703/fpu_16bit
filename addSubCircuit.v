@@ -119,7 +119,7 @@ module addSubCircuit (
                             else 
                                 state <= 3;
                         end
-                    end else if (xExp < yExp) begin
+                    end else if (xExp > yExp) begin
                         yExp <= tempExp;
                         yMan <= tempMan;
                         if (tempMan == 0)
@@ -134,9 +134,10 @@ module addSubCircuit (
                 end    
                 4: begin //note that moore circuit output is delayed by 1 cycle
                     if (xMan == 0)
-                        result <= Y;
-                    else if (yMan == 0)
-                        result <= X;
+                        result <= {zExp, Y[14:0]};
+                    else if (yMan == 0) begin
+                        result <= {zExp, X[14:0]};
+                    end
                     done <= 1;
                 end        
                 5: begin
