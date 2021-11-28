@@ -9,19 +9,21 @@ module mulDivCircuit (
     reg [4:0] xExp, yExp, zExp, tempExp;
     reg [10:0] xMan, yMan; //hidden bit
 
-    reg [5:0] expSum;
+    reg signed [5:0] expSum;
     reg [21:0] manTemp; //22 bits for the overflow from 11bit x 11bit 
     reg [21:0] manTempShifted;
     
     always @ (*) begin
-        expSum = xExp + yExp - 15;
-
-        if (mulDiv == 1'b0)
+        
+        if (mulDiv == 1'b0) begin //multiply
+            expSum = xExp + yExp - 15;
             manTemp = xMan * yMan;
-        else    
-            manTemp = xMan / yMan;
+        end else begin //divide
+            expSum = xExp - yExp + 15;
+            manTemp = {xMan, {11{1'b0}}}  / {{11{1'b0}}, yMan}; //shifting the dividend
+        end  
         zSign = xSign ^ ySign;
-        manTempShifted = manTemp << 1;
+       
         tempExp = zExp + 1; //must store as 5 bits
     end
 
@@ -59,7 +61,7 @@ module mulDivCircuit (
                     state <= 1;
                 end
                 2: begin
-                    if (xExp + yExp < 15) begin //exponent underflow since bias gets subtracted
+                    if (expSum < 0) begin //exponent underflow since bias gets subtracted
                         OFUF <= 2'b01;
                         state <= 3;
                         done <= 1;
@@ -73,6 +75,12 @@ module mulDivCircuit (
                 end
                 4: begin
                     zExp <= expSum;
+
+                    if (mulDiv) //shift the lower half upwards for division
+                        manTempShifted <= {1'b0, manTemp[10:0], {10{1'b0}}} ; //divison will never have overflow so MSB will be 0
+                    else //for multplication take the upper half as well
+                        manTempShifted <= manTemp;
+
                     if (manTemp[21] == 1) begin //mantissa overflow
                         if (expSum == 30) begin //adding 1 more would cause overflow 
                             OFUF <= 2'b10;
@@ -87,9 +95,9 @@ module mulDivCircuit (
                     if (zExp == 1'b0) //underflow if subtracted from 0 before clk edge
                         state <= 6;
                     else begin
-                        manTemp <= manTempShifted;
+                        manTempShifted <= manTempShifted << 1;
                         zExp <= zExp - 1;
-                        if (manTempShifted[21] == 1) //manTemp has not been updated yet before clk edge
+                        if (manTempShifted[20] == 1) //manTemp has not been updated yet before clk edge
                             state <= 7;
                         else
                             state <= 5;
@@ -103,7 +111,7 @@ module mulDivCircuit (
                     if (manTemp[21] == 1) //mantissa overflow
                         result <= {zSign, tempExp, manTemp[20:11]};
                     else
-                        result <= {zSign, zExp, manTemp[20:11]}; //extract the 10 msb bits excluding the hidden bit
+                        result <= {zSign, zExp, manTempShifted[20:11]}; //extract the 10 msb bits excluding the hidden bit
                         
                     done <= 1;
                 end

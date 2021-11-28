@@ -24,17 +24,20 @@ module mulDivCircuit_tb ();
         #10 reset = 0;
 
         #100; 
+        //works, expected 0xC650 
         mulDiv = 1; 
         #10 reset = 1;
         #10 reset = 0;
 
-        #200; 
+        #160; 
+        //works, expected underflow
         X = 16'h118D;
         Y = 16'hEF08;
         #10 reset = 1;
         #10 reset = 0;
 
-        #200; 
+        #40; 
+        //works, expected 0xCA50
         X = 16'h418D;
         Y = 16'hB308;
         #10 reset = 1;
