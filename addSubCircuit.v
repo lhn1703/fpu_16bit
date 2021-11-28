@@ -193,6 +193,7 @@ module addSubCircuit (
                     result <= {zSign, zExp, zMan[9:0]};
                     done <= 1;
                 end
+                default: state <= 0; 
             endcase
         end
     end
