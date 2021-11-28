@@ -4,10 +4,10 @@ module mulDivCircuit (
     input mulDiv, reset, clk
     ); //mulDiv is 0 if multiply, 1 if divide
 
-    reg [3:0] state;
+    reg [2:0] state;
     reg xSign, ySign, zSign;
     reg [4:0] xExp, yExp, zExp;
-    reg [10:0] xMan, yMan, zMan; //hidden bit
+    reg [10:0] xMan, yMan; //hidden bit
 
     reg [5:0] expSum;
     reg [21:0] manTemp;
@@ -19,8 +19,7 @@ module mulDivCircuit (
             manTemp = xExp * yExp;
         else    
             manTemp = xExp / yExp;
-
-        zSign = xSign ^ ySign;
+ 
         manTempShifted = manTemp << 1;
 
     end
@@ -40,7 +39,7 @@ module mulDivCircuit (
         end else begin
             case (state)
                 0: begin
-                    if (X == 16'b0 or Y == 16'b0) begin
+                    if (X == 16'b0 || Y == 16'b0) begin
                         if (X == 16'b0)
                             result <= 16'b0;
                         else begin
@@ -73,11 +72,34 @@ module mulDivCircuit (
                     state <= 3;
                 end
                 4: begin
+                    zSign <= xSign ^ ySign;
+                    zExp <= expSum;
                     if (manTemp[21] == 1)
                         state <= 7;
-                    
+                    else
+                        state <= 5;
+                end
+                5: begin
+                    if (zExp == 1'b0) //underflow if subtracted from 0 before clk edge
+                        state <= 6;
+                    else begin
+                        manTemp <= manTempShifted;
+                        zExp <= zExp - 1;
+                        if (manTempShifted[21] == 1) //manTemp has not been updated yet before clk edge
+                            state <= 7;
+                        else
+                            state <= 5;
+                    end
+                end
+                6: begin
+                    OFUF <= 2'b01;
+                    done <= 1;
+                end
+                7: begin
+                    result <= {zSign, zExp, manTemp[20:11]}; //extract the 10 msb bits excluding the hidden bit
+                    done <= 1;
                 end
             endcase
         end
-
     end
+endmodule
