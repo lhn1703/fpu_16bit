@@ -17,9 +17,6 @@
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/multiplication-division%20flowchart.png)
 - Comparator 
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/comparison.png)
-# Fast Inverse Square Root Circuit
-- uses the FPU to perform its computations
-![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/fast%20inverse%20square%20root%20block%20diagram.png)
 # Fast Inverse Square Root Algorithm
 ```c++
 //original 32-bit floating point algorithm courtesy of John Carmack
@@ -59,4 +56,7 @@ half invSqrt(half x) {
 		8. return temp;
 - the operation fails whenever overflow or underflow is detected from the fpu.
 - this hardware implementation may not be as efficient as software implementation with compiler optimizations running on a pipelined computer
+# Fast Inverse Square Root Circuit and Flowchart
+- uses the FPU to perform its computations
+![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/fast%20inverse%20square%20root%20block%20diagram.png)
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/fast%20inverse%20sqrt%20flowchart.png)
