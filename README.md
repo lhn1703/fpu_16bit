@@ -15,7 +15,7 @@
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/addition-subtraction%20flowchart.png)
 - Multiplication/Division
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/multiplication-division%20flowchart.png)
-- Comparator 
+- Comparator \
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/comparison.png)
 # Fast Inverse Square Root Algorithm
 ```c++
