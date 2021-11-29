@@ -7,8 +7,11 @@ module fpu_16bit_tb ();
     reg [1:0] opcode;
     reg reset = 0, clk = 0;
 
+    reg [50000:0] cycleCounter = 0;
+
     fpu_16bit u00 (OFUF, done, result, compResult, X, Y, opcode, reset, clk);
     always clk = #5 ~clk;
+    always cycleCounter = #10 cycleCounter + 1;
 
     initial begin
         //works, expected result 0x1160

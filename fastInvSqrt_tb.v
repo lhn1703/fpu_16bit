@@ -5,9 +5,11 @@ module fastInvSqrt_tb();
     reg [15:0] Xin;
     reg reset = 0, clk = 0;
 
+    reg [50000:0] cycleCounter = 0;
+
     fastInvSqrt u000 (OFUF, done, result, Xin, reset, clk);
     always clk = #5 ~clk;
-
+    always cycleCounter = #10 cycleCounter + 1;
     initial begin
         #5;
         Xin = 16'h50BB; //37.86, works: expecting 0x3133
