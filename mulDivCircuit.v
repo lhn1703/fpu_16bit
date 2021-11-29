@@ -19,8 +19,8 @@ module mulDivCircuit (
             expSum = xExp + yExp - 15;
             manTemp = xMan * yMan;
         end else begin //divide
-            expSum = xExp - yExp + 15;
-            manTemp = {xMan, {11{1'b0}}}  / {{11{1'b0}}, yMan}; //shifting the dividend
+            expSum = xExp - yExp + 15; //shifting the quotient to the top
+            manTemp = {xMan, {11{1'b0}}}  / {{11{1'b0}}, yMan}; 
         end  
         zSign = xSign ^ ySign;
        
@@ -111,8 +111,7 @@ module mulDivCircuit (
                     if (manTemp[21] == 1) //mantissa overflow
                         result <= {zSign, tempExp, manTemp[20:11]};
                     else
-                        result <= {zSign, zExp, manTempShifted[20:11]}; //extract the 10 msb bits excluding the hidden bit
-                        
+                        result <= {zSign, zExp, manTempShifted[20:11]}; //extract the 10 msb bits excluding the hidden bit          
                     done <= 1;
                 end
             endcase
