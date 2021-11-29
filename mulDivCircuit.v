@@ -38,7 +38,7 @@ module mulDivCircuit (
             yMan <= {1'b1, Y[9:0]};
             
             done <= 0;
-            OFUF <= 2'b0;
+            OFUF <= 2'b00;
         end else begin
             case (state)
                 0: begin
@@ -51,7 +51,6 @@ module mulDivCircuit (
                             else //divide by zero yields overflow
                                 OFUF <= 2'b10;
                         end
-                        done <= 1'b1;
                         state <= 1;
                     end
                     else 
@@ -86,10 +85,18 @@ module mulDivCircuit (
                             OFUF <= 2'b10;
                             done <= 1;
                             state <= 3;
-                        end else
+                        end 
+                        else
                             state <= 7;
-                    end else
-                        state <= 5;
+                    end 
+                    else begin
+                        if (manTemp[20] == 1'b1) begin //special case for state 4-7 transition where shift needs to happen right away
+                            state <= 7;
+                            manTempShifted <= manTemp << 1;
+                        end
+                        else
+                            state <= 5;
+                    end
                 end
                 5: begin
                     if (zExp == 1'b0) //underflow if subtracted from 0 before clk edge
@@ -106,13 +113,15 @@ module mulDivCircuit (
                 6: begin
                     OFUF <= 2'b01;
                     done <= 1;
+                    state <= 6;
                 end
                 7: begin
                     if (manTemp[21] == 1) //mantissa overflow
                         result <= {zSign, tempExp, manTemp[20:11]};
-                    else
+                    else 
                         result <= {zSign, zExp, manTempShifted[20:11]}; //extract the 10 msb bits excluding the hidden bit          
                     done <= 1;
+                    state <= 7;
                 end
             endcase
         end

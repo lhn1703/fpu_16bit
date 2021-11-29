@@ -8,15 +8,15 @@ module fpu_16bit (
     input reset, clk 
     );
 
-    // wire addSubReset, mulDivReset;
-    // assign addSubReset = reset;
-    // assign mulDivReset = reset;
-
     reg addSub, mulDiv;
 
     wire [1:0] addSubOFUF, mulDivOFUF;
     wire addSubDone, mulDivDone;
     wire [15:0] addSubResult, mulDivResult;
+
+    addSubCircuit u0 (addSubOFUF, addSubDone, addSubResult, X, Y, addSub, reset, clk);
+    mulDivCircuit u1 (mulDivOFUF, mulDivDone, mulDivResult, X, Y, mulDiv, reset, clk);
+    comparator u2 (compResult, X, Y, clk);
 
     always @ (*) begin //combinational logic
         case(opcode) 
@@ -57,9 +57,5 @@ module fpu_16bit (
             end
         endcase
     end
-
-    addSubCircuit u0 (addSubOFUF, addSubDone, addSubResult, X, Y, addSub, reset, clk);
-    mulDivCircuit u1 (mulDivOFUF, mulDivDone, mulDivResult, X, Y, mulDiv, reset, clk);
-    comparator u2 (compResult, X, Y, clk);
 
 endmodule
