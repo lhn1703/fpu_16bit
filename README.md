@@ -3,6 +3,8 @@
 - there are four FPU operations: addition, subtraction, multiplication and division
 - currently, excess bits are truncated (can implement a rounding feature in the future)
 - this is a standalone computation unit, the other stages of computer architecture not imeplemented here
+- online half precision converter: https://evanw.github.io/float-toy/ 
+- online half precision calculator: http://weitz.de/ieee/
 # Half Precision FPU Diagram
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/fpu%20controls%20block%20diagram.png)
 # State Graphs 
