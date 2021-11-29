@@ -1,4 +1,4 @@
-# fpu_16_bit
+# 16-Bit Verilog FPU 
 - this FPU computes IEEE 754 half-precision binary floating-point format
 - there are four FPU operations: addition, subtraction, multiplication and division
 - currently, excess bits are truncated (can implement a rounding feature in the future)
