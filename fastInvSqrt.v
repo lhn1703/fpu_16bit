@@ -18,12 +18,14 @@ module fastInvSqrt (
     reg [1:0] opcode;
 
     reg [15:0] xHalf;
+    reg [5:0] expSub;
     reg [16:0] bitHack;
 
     fpu_16bit u00 (fpuOFUF, fpuDone, fpuResult, compResult, xOp, yOp, opcode, fpuReset, clk);
 
     always @ (*) begin
-        xHalf = {Xin[15], (Xin[14:10] - 1), Xin[9:0]};
+        expSub = {1'b0, Xin[14:10]} - 1;
+        xHalf = {Xin[15], expSub[4:0], Xin[9:0]};
         bitHack = 16'h59BB - (Xin >> 1);
     end
 
