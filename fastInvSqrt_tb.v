@@ -19,6 +19,7 @@ module fastInvSqrt_tb();
         Xin = 16'h4DE1; //23.52, works: expecting 0x3298
         #10 reset = 1;
         #10 reset = 0;
+		#300 $stop;
     end
 
 endmodule
