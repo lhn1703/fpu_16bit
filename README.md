@@ -48,13 +48,13 @@ half invSqrt(half x) {
 }	
 ```
 - the circuit performs the computation states as follows:
-		3. combinatorial binary bitHack calculation
-		4. temp = bitHack * bitHack;
-		5. temp = xHalf * temp;
-		6. temp = 1.50 - temp;
-		7. temp = bitHack * temp;
-		8. return temp;
-- the operation fails whenever overflow or underflow is detected from the fpu.
+3. combinatorial binary bitHack calculation
+4. temp = bitHack * bitHack;
+5. temp = xHalf * temp;
+6. temp = 1.50 - temp;
+7. temp = bitHack * temp;
+8. return temp;
+- the operation fails whenever overflow or underflow is detected from the fpu and will enter defunct state 9
 - this hardware implementation may not be as efficient as software implementation with compiler optimizations running on a pipelined computer
 # Fast Inverse Square Root Circuit and Flowchart
 - uses the FPU to perform its computations
