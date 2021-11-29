@@ -9,7 +9,8 @@
 - implemeneted with Moore Circuit methodology for stable computation, outputs may be delayed one cycle as a result
 - note that state graphs may contain extra or be missing some transition signals to help decrease clutter
 - the following logic flowcharts better describe the circuit's behavior
-![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/state%20graphs.png)
+![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/fpu%20state%20graphs.png)
+![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/fast%20inverse%20sqrt%20state%20graphs.png)
 # FPU Internal Logic Flowcharts
 - Addition/Subtraction
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/addition-subtraction%20flowchart.png)
@@ -39,6 +40,7 @@ half invSqrt(half x) {
 	y = *(half*)&bitHack;
 	
 	//first iteration of Newton's Method
+	//can be pipelined into ((y * 1.50) - (y * y) * (y * xHalf)) utilizing 2 FPUs
 	y = y * (threehalfs - (xHalf * y * y)); 
 	
 	//second iteration not included since it would double execution time
@@ -55,8 +57,11 @@ half invSqrt(half x) {
 7. temp = bitHack * temp;
 8. return temp;
 - the operation fails whenever overflow or underflow is detected from the fpu and will enter defunct state 9
-- this hardware implementation may not be as efficient as software implementation with compiler optimizations running on a pipelined computer
 # Fast Inverse Square Root Circuit and Flowchart
 - uses the FPU to perform its computations
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/fast%20inverse%20square%20root%20block%20diagram.png)
 ![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/fast%20inverse%20sqrt%20flowchart.png)
+# Pipelined Fast Inverse Square Root Circuit and Flowchart
+- utilizing two FPUs yields approximately 20% better performance; reduces execution time by about 5 clock cycles
+![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/pipelined%20fast%20inverse%20square%20root%20block%20diagram.png)
+![alt text](https://github.com/lhn1703/fpu_16bit/blob/main/documentation/pipelined%20fast%20inverse%20sqrt%20flowchart.png)
