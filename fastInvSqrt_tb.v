@@ -10,7 +10,11 @@ module fastInvSqrt_tb();
 
     initial begin
         #5;
-        Xin = 16'h50BB; //37.86, expecting 0x3133
+        Xin = 16'h50BB; //37.86, works: expecting 0x3133
+        #10 reset = 1;
+        #10 reset = 0;
+        #500;
+        Xin = 16'h4DE1; //23.52, works: expecting 0x3298
         #10 reset = 1;
         #10 reset = 0;
     end

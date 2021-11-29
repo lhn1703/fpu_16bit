@@ -27,7 +27,7 @@ module fastInvSqrt (
         bitHack = 16'h59BB - (Xin >> 1);
     end
 
-    always @ (negedge clk or posedge reset or fpuOFUF) begin
+    always @ (posedge clk or posedge reset) begin
         if (reset) begin
             state <= 0;
             OFUF <= 2'b00;
@@ -73,11 +73,11 @@ module fastInvSqrt (
                             state <= 9; //dead state
                         end
                         else begin //state 4 set up
-                            state <= 4;
-                            xOp <= Xin;
-                            yOp <= Xin;
+                            xOp <= bitHack;
+                            yOp <= bitHack;
                             opcode <= 2;
                             fpuReset <= 1;
+                            state <= 4;
                         end
                     end
                 end
@@ -97,7 +97,7 @@ module fastInvSqrt (
                     fpuReset <= 0;
                     if (fpuDone) begin //state 6 setup
                         yOp <= fpuResult;
-                        xOp <= 16'h3E00; 
+                        xOp <= 16'h3E00; //1.50
                         opcode <= 1;
                         fpuReset <= 1;
                         state <= 6;
@@ -105,14 +105,14 @@ module fastInvSqrt (
                     else
                         state <= 5;
                 end
-                6: begin //computing y = 3.50 - (xHalf * (y * y))
+                6: begin //computing y = 1.50 - (xHalf * (y * y))
                     fpuReset <= 0;
-                    if (fpuDone) begin //state 6 setup
+                    if (fpuDone) begin //state 7 setup
                         yOp <= fpuResult;
-                        xOp <= Xin; 
+                        xOp <= bitHack[15:0]; 
                         opcode <= 2;
                         fpuReset <= 1;
-                        state <= 6;
+                        state <= 7;
                     end
                     else
                         state <= 6;

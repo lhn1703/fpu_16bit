@@ -82,9 +82,9 @@ module fpu_16bit_tb ();
 
         //#100 $stop;
         #100;
-        //
+        //works, expected 0x6598
         opcode = 2;
-        X = 16'h50BB;
+        X = 16'h50BB; //37.84
         Y = X;
         #10 reset = 1;
         #10 reset = 0;
