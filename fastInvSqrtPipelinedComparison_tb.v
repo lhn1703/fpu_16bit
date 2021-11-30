@@ -20,7 +20,11 @@ module fastInvSqrtPipelinedComparison_tb();
         Xin = 16'h4DE1; //23.52, works: expecting 0x3298
         #10 reset = 1;
         #10 reset = 0;
-		#300 $stop;
+		#300;
+        Xin = 16'h71C0; //11776, works: expecting 0x20B7
+        #10 reset = 1;
+        #10 reset = 0;
+        #400 $stop;
     end
 
 endmodule
