@@ -1,0 +1,31 @@
+ 
+****************************************
+Report : area
+Design : fastInvSqrtPipelined
+Version: O-2018.06-SP3
+Date   : Mon Dec  6 13:02:32 2021
+****************************************
+
+Information: Updating design information... (UID-85)
+Library(s) Used:
+
+    NangateOpenCellLibrary (File: /synopsys/Nangate_FreePDK45/NangateOpenCellLibrary_PDKv1_3_v2010_12/Front_End/Liberty/CCS/NangateOpenCellLibrary.db)
+
+Number of ports:                           37
+Number of nets:                          3038
+Number of cells:                         2567
+Number of combinational cells:           2165
+Number of sequential cells:               388
+Number of macros/black boxes:               0
+Number of buf/inv:                        524
+Number of references:                      46
+
+Combinational area:               3386.978015
+Buf/Inv area:                      281.162003
+Noncombinational area:            1645.209982
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                  5032.187998
+Total area:                 undefined
+1
