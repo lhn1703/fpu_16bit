@@ -7,12 +7,30 @@ module fpu_16bit_tb ();
     reg [1:0] opcode;
     reg reset = 0, clk = 0;
 
+    wire [31:0] xDec, resultDec, yDec;
+    assign xDec[31] = X[15];
+    assign xDec[30:23] = X[14:10] - 15 + 127;
+    assign xDec[22:0] = {X[9:0], 13'b0};
+
+    assign yDec[31] = Y[15];
+    assign yDec[30:23] = Y[14:10] - 15 + 127;
+    assign yDec[22:0] = {Y[9:0], 13'b0};
+
+    assign resultDec[31] = result[15];
+    assign resultDec[30:23] = result[14:10] - 15 + 127;
+    assign resultDec[22:0] = {result[9:0], 13'b0};
+
     reg [50000:0] cycleCounter = 0;
 
     fpu_16bit u00 (OFUF, done, result, compResult, X, Y, opcode, reset, clk);
     always clk = #5 ~clk;
     always cycleCounter = #10 cycleCounter + 1;
-
+    always @ (posedge clk) begin
+        if (reset)
+            cycleCounter <= 0;
+        else
+            cycleCounter <= cycleCounter + 1;
+    end
     initial begin
         //works, expected result 0x1160
         opcode = 0;
