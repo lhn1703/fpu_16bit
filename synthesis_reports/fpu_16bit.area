@@ -1,0 +1,31 @@
+ 
+****************************************
+Report : area
+Design : fpu_16bit
+Version: O-2018.06-SP3
+Date   : Mon Dec  6 12:56:35 2021
+****************************************
+
+Information: Updating design information... (UID-85)
+Library(s) Used:
+
+    NangateOpenCellLibrary (File: /synopsys/Nangate_FreePDK45/NangateOpenCellLibrary_PDKv1_3_v2010_12/Front_End/Liberty/CCS/NangateOpenCellLibrary.db)
+
+Number of ports:                           58
+Number of nets:                          2051
+Number of cells:                         1715
+Number of combinational cells:           1485
+Number of sequential cells:               220
+Number of macros/black boxes:               0
+Number of buf/inv:                        382
+Number of references:                      40
+
+Combinational area:               2337.874010
+Buf/Inv area:                      204.022002
+Noncombinational area:             937.117998
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (Wire load has zero net area)
+
+Total cell area:                  3274.992009
+Total area:                 undefined
+1

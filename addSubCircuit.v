@@ -69,7 +69,7 @@ module addSubCircuit (
                     xBigger <= 0;    
             end
             done <= 0;
-            OFUF <= 2'b0;
+            OFUF <= 2'b00;
         end
         else begin
             case (state) 
@@ -97,6 +97,7 @@ module addSubCircuit (
                             result <= Y;  
                     end                 
                     done <= 1;
+                    state <= 1;
                 end
                 2: begin
                     ySign <= ~ySign;
@@ -139,6 +140,7 @@ module addSubCircuit (
                         result <= {zExp, X[14:0]};
                     end
                     done <= 1;
+                    state <= 4;
                 end        
                 5: begin
                     zExp <= xExp; //doesn't matter which one gets chosen they are equal
@@ -159,6 +161,7 @@ module addSubCircuit (
                 6: begin
                     result <= 16'b0;
                     done <= 1;
+                    state <= 6;
                 end
                 7: begin //addition overflow state
                     if (zExp == 5'b11110) //mantissa overflow with maximum representable exponent
@@ -188,11 +191,14 @@ module addSubCircuit (
                 10: begin //exponent underflow
                     OFUF <= 2'b01;
                     done <= 1;
+                    state <= 10;
                 end
                 11: begin
                     result <= {zSign, zExp, zMan[9:0]};
                     done <= 1;
+                    state <= 11;
                 end
+                default: state <= 0; 
             endcase
         end
     end
