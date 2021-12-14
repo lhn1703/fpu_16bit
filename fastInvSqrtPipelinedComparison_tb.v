@@ -26,8 +26,10 @@ module fastInvSqrtPipelinedComparison_tb();
     always @ (posedge clk) begin
         if (reset)
             cycleCounter <= 0;
-        else
+        else if (~done0)
             cycleCounter <= cycleCounter + 1;
+        else
+            cycleCounter <= cycleCounter;
     end
     initial begin
         #5;

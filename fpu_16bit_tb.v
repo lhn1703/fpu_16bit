@@ -28,8 +28,10 @@ module fpu_16bit_tb ();
     always @ (posedge clk) begin
         if (reset)
             cycleCounter <= 0;
-        else
+        else if (~done)
             cycleCounter <= cycleCounter + 1;
+        else
+            cycleCounter <= cycleCounter;
     end
     initial begin
         #5;
